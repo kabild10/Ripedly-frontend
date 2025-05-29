@@ -15,8 +15,6 @@ const YouTubeTrimmer = () => {
   const [statusMessage, setStatusMessage] = useState("");
   const [isLongWait, setIsLongWait] = useState(false);
 
-  
-
   const validateYouTubeUrl = (url) => {
     if (!url) return "Please enter a URL";
     
@@ -60,6 +58,9 @@ const YouTubeTrimmer = () => {
     }
   };
 
+  const BACKEND_URL =    "http://localhost:5000";
+
+
   const handleTrim = async (e) => {
     e.preventDefault();
     setError(null);
@@ -73,7 +74,10 @@ const YouTubeTrimmer = () => {
       // Stage 1: Backend health check (0-5%)
       setStatusMessage("Checking backend service...");
       setProgress(5);
-const healthCheck = await fetch('http://localhost:5000/api/health');
+
+
+
+      const healthCheck = await fetch('${BACKEND_URL}/api/health');
       if (!healthCheck.ok) {
         throw new Error('Backend service is unavailable');
       }
@@ -104,7 +108,7 @@ const healthCheck = await fetch('http://localhost:5000/api/health');
       }, 20000); // Show after 20 seconds
 
       const response = await fetch(
-        `http://localhost:5000/api/trim`,
+        `${BACKEND_URL}/api/trim`,
         {
           method: 'POST',
           headers: { "Content-Type": "application/json" },
