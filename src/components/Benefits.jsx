@@ -228,7 +228,7 @@ const YouTubeTrimmer = () => {
               <div className="p-1 bg-gradient-to-r from-n-5 to-n-6">
               <h3 className="h4 text-center p-4 font-sora text-white">
   Gimme that URL,{" "}
-  <span style={{ color: "#00ffff" }}>let’s cook!</span>
+  <span style={{ color: "#00ffff" }}>let’s cook</span>
 </h3>
               </div>
               
