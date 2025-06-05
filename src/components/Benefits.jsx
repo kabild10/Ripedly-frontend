@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import Header from "./Header";
 import Section from "./Section";
+import { motion } from "framer-motion";
 
 const YouTubeTrimmer = () => {
   const [url, setUrl] = useState("");
@@ -190,35 +191,31 @@ const YouTubeTrimmer = () => {
       <div className="pt-4 pb-8 px-4">
         <Section id="youtube-trimmer">
           <div className="container relative z-2">
-          <h1 className="h2 text-center mb-8 font-sora text-white">
-  {/* Line 1: "Rip what hits!" (full width) */}
-  <div className="md:inline">
-    <span
-      style={{
-        color: '#00ffff',
-        fontFamily: 'Comfortaa, cursive',
-        fontWeight: 'bold',
-      }}
-    >
-      Rip
-    </span>{' '}
-    what hits!
-  </div>
+   <motion.h1
+  initial={{ opacity: 0, y: -20 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.6, ease: "easeOut" }}
+  className="text-xl sm:text-3xl md:text-4xl text-center mb-8 font-sora text-white font-bold"
+>
+  AI-Powered YouTube Video Cutter –{' '}
+  <span style={{ color: '#00ffff' }}>
+    Fast & Accurate
+  </span>
+</motion.h1>
 
-  {/* Line 2: "Drop what fits!" (indented on mobile) */}
-  <div className="md:inline md:ml-2">
-    <span
-      style={{
-        color: '#00ffff',
-        fontFamily: 'Comfortaa, cursive',
-        fontWeight: 'bold',
-      }}
-    >
-      Drop
-    </span>{' '}
-    what fits!
-  </div>
-</h1>
+
+
+
+<motion.h2
+  initial={{ opacity: 0, scale: 0.8 }}
+  animate={{ opacity: 1, scale: 1 }}
+  transition={{ duration: 0.6, ease: "easeOut" }}
+  className="text-center mb-8 font-sora text-white"
+>
+  Easily Download Trimmed YouTube Videos Anytime
+</motion.h2>
+
+
 
 
 
