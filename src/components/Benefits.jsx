@@ -243,10 +243,10 @@ const YouTubeTrimmer = () => {
                     required
                     disabled={isLoading}
                   />
-                  <p className="text-n-4 text-xs mt-2">
-                  Link Please, We’re Hungry for Edits 🍿✂️
+                 <p className="text-n-4 text-xs mt-2 whitespace-nowrap">
+  Link Please, We’re Hungry for Edits 🍿✂️
+</p>
 
-                  </p>
                 </div>
                 
                 {error && !showVideo && (
@@ -312,14 +312,20 @@ const YouTubeTrimmer = () => {
                 
                 <form onSubmit={handleTrim} className="p-6 md:p-8">
                   <div className="mb-4">
-                    <div className="bg-yellow-100/20 border border-yellow-300 rounded-lg p-3 mb-4">
-                      <p className="font-medium text-sm flex items-start">
-                        <svg className="w-4 h-4 mt-0.5 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                        <span>Enter time as seen on YouTube</span>
-                      </p>
-                    </div>
+                   <div className="bg-yellow-100/20 border border-yellow-300 rounded-lg p-3 mb-4 overflow-x-auto">
+  <p className="font-medium text-sm flex items-center whitespace-nowrap">
+    <svg
+      className="w-4 h-4 mt-0.5 mr-2 flex-shrink-0"
+      fill="none"
+      stroke="currentColor"
+      viewBox="0 0 24 24"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+    </svg>
+    <span>Enter time as seen on YouTube</span>
+  </p>
+</div>
                     
                     <div className="grid grid-cols-2 gap-4">
                       <div>
