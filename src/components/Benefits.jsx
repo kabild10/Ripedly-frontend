@@ -223,10 +223,13 @@ const YouTubeTrimmer = () => {
             {/* URL Input Form */}
             <div className="max-w-[40rem] mx-auto bg-n-7 rounded-3xl overflow-hidden shadow-lg mb-8">
               <div className="p-1 bg-gradient-to-r from-n-5 to-n-6">
-              <h3 className="h4 text-center p-4 font-sora text-white">
-  Gimme that URL,{" "}
-  <span style={{ color: "#00ffff" }}>let’s cook</span>
+         <h3 className="text-2xl max-[640px]:text-lg text-center p-4 font-sora text-white whitespace-nowrap overflow-hidden text-ellipsis">
+  Gimme that URL, <span style={{ color: '#00ffff' }}>let’s cook</span>
 </h3>
+
+
+
+
               </div>
               
               <form onSubmit={handleUrlSubmit} className="p-6 md:p-8">
@@ -275,9 +278,12 @@ const YouTubeTrimmer = () => {
             {showVideo && (
               <div className="max-w-[40rem] mx-auto bg-n-7 rounded-3xl overflow-hidden shadow-lg mb-8">
                 <div className="p-1 bg-gradient-to-r from-n-5 to-n-6">
-                  <h2 className="h4 text-center p-4 font-sora">
-                    Video Preview
-                  </h2>
+                <h2 className="text-2xl max-[640px]:text-lg text-center p-4 font-sora">
+  <span className="text-white">Video </span>
+  <span style={{ color: "#00ffff" }}>Preview</span>
+</h2>
+
+
                 </div>
                 <div className="p-4 sm:p-6 aspect-video">
                   <div className="relative h-0 pb-[56.25%] sm:pb-0 sm:h-full">
@@ -298,9 +304,10 @@ const YouTubeTrimmer = () => {
             {showVideo && (
               <div className="max-w-[40rem] mx-auto bg-n-7 rounded-3xl overflow-hidden shadow-lg">
                 <div className="p-1 bg-gradient-to-r from-n-5 to-n-6">
-                  <h2 className="h4 text-center p-4 font-sora">
-                    Select Trim Points
-                  </h2>
+                 <h2 className="text-2xl max-[640px]:text-lg text-center p-4 font-sora text-white">
+  Select Trim <span style={{ color: "#00ffff" }}>Points</span>
+</h2>
+
                 </div>
                 
                 <form onSubmit={handleTrim} className="p-6 md:p-8">
