@@ -82,7 +82,7 @@ const BACKEND_URL =
 
 
 
-      const healthCheck = await fetch('${BACKEND_URL}/api/health');
+      const healthCheck = await fetch(`${BACKEND_URL}/api/health`);  // ✅ Correct backticks
       if (!healthCheck.ok) {
         throw new Error('Backend service is unavailable');
       }
