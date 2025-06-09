@@ -59,10 +59,10 @@ const YouTubeTrimmer = () => {
     }
   };
 
-const BACKEND_URL = 
-  window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
-    ? "http://localhost:5000"  // Local backend
-    : "https://ripedly-backend.onrender.com";  // Live backend
+const BACKEND_URLS = [
+  "https://ripedly-backend.onrender.com", // 🔵 Primary (Render)
+  "https://a3f7f48d-7e54-4bdb-9a0f-10270e73ca32-00-wcobrpq637z5.sisko.replit.dev:8000" // 🟡 Fallback (Replit)
+];
 
 
 
