@@ -17,21 +17,9 @@ const YouTubeTrimmer = () => {
   const [statusMessage, setStatusMessage] = useState("");
   const [isLongWait, setIsLongWait] = useState(false);
 
-  const getBackendUrl = () => {
-    if (window.location.hostname === 'localhost') {
-      return 'http://localhost:5001';  // Development
-    }
-    
-    // Try Replit deployment first, fallback to Render.com
-    const replotUrl = 'https://e019527c-39c7-4ae5-a975-3183ed37f1eb-00-12fctld4jpitj.sisko.replit.dev';
-    const renderUrl = 'https://ripedly-backend.onrender.com';
-    
-    // You can implement logic here to test both URLs and use the working one
-    // For now, we'll use Replit as primary
-    return replotUrl;
-  };
+ const BACKEND_URL = "https://ripedly-backend.onrender.com";
+
   
-  const BACKEND_URL = getBackendUrl();
 
   const validateYouTubeUrl = (url) => {
     if (!url) return "Please enter a URL";
