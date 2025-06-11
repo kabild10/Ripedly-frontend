@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import Header from "./Header";
 import Section from "./Section";
@@ -15,6 +16,22 @@ const YouTubeTrimmer = () => {
   const [progress, setProgress] = useState(0);
   const [statusMessage, setStatusMessage] = useState("");
   const [isLongWait, setIsLongWait] = useState(false);
+
+  const getBackendUrl = () => {
+    if (window.location.hostname === 'localhost') {
+      return 'http://localhost:5001';  // Development
+    }
+    
+    // Try Replit deployment first, fallback to Render.com
+    const replotUrl = 'https://e019527c-39c7-4ae5-a975-3183ed37f1eb-00-12fctld4jpitj.sisko.replit.dev';
+    const renderUrl = 'https://ripedly-backend.onrender.com';
+    
+    // You can implement logic here to test both URLs and use the working one
+    // For now, we'll use Replit as primary
+    return replotUrl;
+  };
+  
+  const BACKEND_URL = getBackendUrl();
 
   const validateYouTubeUrl = (url) => {
     if (!url) return "Please enter a URL";
@@ -59,13 +76,6 @@ const YouTubeTrimmer = () => {
     }
   };
 
-const BACKEND_URLS = [
-  "https://ripedly-backend.onrender.com", // 🔵 Primary (Render)
-  "https://a3f7f48d-7e54-4bdb-9a0f-10270e73ca32-00-wcobrpq637z5.sisko.replit.dev:8000" // 🟡 Fallback (Replit)
-];
-
-
-
   const handleTrim = async (e) => {
     e.preventDefault();
     setError(null);
@@ -76,54 +86,75 @@ const BACKEND_URLS = [
     setStatusMessage("Initializing trim process...");
 
     try {
-      // Stage 1: Backend health check (0-5%)
-      setStatusMessage("Checking backend service...");
+      // Stage 1: Backend health check (0-10%)
+      setStatusMessage("Checking backend connection...");
       setProgress(5);
-
-
-
-      const healthCheck = await fetch(`${BACKEND_URL}/api/health`);  // ✅ Correct backticks
+      
+      console.log("Testing backend connection to:", BACKEND_URL);
+      
+      const healthCheck = await fetch(`${BACKEND_URL}/api/health`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        mode: 'cors'
+      });
+      
+      console.log("Health check response:", healthCheck.status, healthCheck.ok);
+      
       if (!healthCheck.ok) {
-        throw new Error('Backend service is unavailable');
+        throw new Error(`Backend unavailable (${healthCheck.status})`);
       }
 
-      // Stage 2: Time validation (5-10%)
-      setStatusMessage("Validating timestamps...");
+      const healthData = await healthCheck.json();
+      console.log("Backend health data:", healthData);
+      
+      setStatusMessage("Backend connected! Validating input...");
       setProgress(10);
+
+      // Stage 2: Time validation (10-15%)
+      setStatusMessage("Validating timestamps...");
+      setProgress(15);
       if (!startTime || !endTime) {
         throw new Error('Start and end times are required');
       }
 
-      // Stage 3: Preparing request (10-15%)
+      // Stage 3: Preparing request (15-20%)
       setStatusMessage("Preparing trim request...");
-      setProgress(15);
-
-      // Stage 4: Sending request with wait indicators (15-30%)
-      setStatusMessage("Processing your video...");
       setProgress(20);
+
+      // Stage 4: Sending request with wait indicators (20-30%)
+      setStatusMessage("Processing your video...");
+      setProgress(25);
       
       // Set up wait time indicators
       const waitTimer = setTimeout(() => {
         setIsLongWait(true);
-        setStatusMessage(" This may take a moment");
+        setStatusMessage("This may take a moment - processing video...");
       }, 10000); // Show after 10 seconds
 
       const veryLongWaitTimer = setTimeout(() => {
-        setStatusMessage("Doing magic... Please wait");
-      }, 20000); // Show after 20 seconds
+        setStatusMessage("Still processing... Almost done!");
+      }, 30000); // Show after 30 seconds
 
-      const response = await fetch(
-        `${BACKEND_URL}/api/trim`,
-        {
-          method: 'POST',
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ 
-            url,
-            startTime,
-            endTime 
-          })
-        }
-      );
+      console.log("Sending trim request to:", `${BACKEND_URL}/api/trim`);
+      
+      const response = await fetch(`${BACKEND_URL}/api/trim`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        mode: 'cors',
+        body: JSON.stringify({ 
+          url,
+          startTime,
+          endTime 
+        })
+      });
+
+      console.log("Trim response:", response.status, response.ok);
 
       // Clear timers
       clearTimeout(waitTimer);
@@ -132,7 +163,8 @@ const BACKEND_URLS = [
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.error || 'Trimming failed');
+        console.error("Trim error response:", errorData);
+        throw new Error(errorData.error || `Request failed (${response.status})`);
       }
 
       // Stage 5: Processing response (30-50%)
@@ -150,21 +182,27 @@ const BACKEND_URLS = [
       // Stage 7: Finalizing (90-100%)
       setStatusMessage("Preparing your download...");
       setProgress(95);
+      
       const blob = await response.blob();
+      console.log("Downloaded blob size:", blob.size);
+      
+      if (blob.size < 1000) {
+        throw new Error("Downloaded file appears to be invalid or too small");
+      }
       
       setStatusMessage("Finalizing...");
       setProgress(100);
       
       const contentDisposition = response.headers.get('content-disposition');
-  let filename = `Ripedly_${startTime.replace(/:/g, '_')}_to_${endTime.replace(/:/g, '_')}.mp4`;
-  
-  // If server provides a filename, use that instead
-  if (contentDisposition) {
-    const filenameMatch = contentDisposition.match(/filename="(.+?)"/);
-    if (filenameMatch && filenameMatch[1]) {
-      filename = filenameMatch[1];
-    }
-  }
+      let filename = `Ripedly_${startTime.replace(/:/g, '_')}_to_${endTime.replace(/:/g, '_')}.mp4`;
+      
+      // If server provides a filename, use that instead
+      if (contentDisposition) {
+        const filenameMatch = contentDisposition.match(/filename="(.+?)"/);
+        if (filenameMatch && filenameMatch[1]) {
+          filename = filenameMatch[1];
+        }
+      }
 
       const downloadUrl = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
@@ -180,11 +218,38 @@ const BACKEND_URLS = [
 
     } catch (err) {
       console.error('Trim error:', err);
-      setError(err.message || 'Failed to trim video. Please try again.');
+      setError(`Connection failed: ${err.message}`);
       setProgress(0);
     } finally {
       setIsLoading(false);
       setIsLongWait(false);
+      setStatusMessage("");
+    }
+  };
+
+  const testConnection = async () => {
+    try {
+      console.log("Testing connection to:", BACKEND_URL);
+      const response = await fetch(`${BACKEND_URL}/api/test-connection`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        mode: 'cors'
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        console.log("Connection test successful:", data);
+        setSuccess("Backend connection test successful!");
+      } else {
+        console.error("Connection test failed:", response.status);
+        setError(`Connection test failed (${response.status})`);
+      }
+    } catch (err) {
+      console.error("Connection test error:", err);
+      setError(`Connection test failed: ${err.message}`);
     }
   };
 
